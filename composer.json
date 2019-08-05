@@ -1,0 +1,17 @@
+{
+  "name": "vitorfiovane/son-php-project-manager",
+  "type": "project",
+  "authors": [
+    {
+      "name": "Vitor Giovane",
+      "email": "vitorgpalves@gmail.com"
+    }
+  ],
+  "require": {},
+  "autoload": {
+    "psr-4": {
+      "Framework\\": "src",
+      "App\\": "app"
+    }
+  }
+}
