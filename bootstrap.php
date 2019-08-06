@@ -12,4 +12,8 @@ $router->add("get", "/projects/(\d+)", function ($param) {
   return "In project $param[1].";
 });
 
-echo $router->run();
+try {
+  echo $router->run();
+} catch (\Framework\Exceptions\HttpException $exception) {
+  echo json_encode(["error" => $exception->getMessage()]);
+}
