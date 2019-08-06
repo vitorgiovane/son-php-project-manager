@@ -14,7 +14,7 @@ class Router
 
   public function run()
   {
-    $url = $_SERVER["PATH_INFO"] ?? "/";
+    $url = $this->getCurrentUrl();
 
     foreach ($this->routes as $route => $action) {
       if (preg_match($route, $url, $params)) {
@@ -22,5 +22,14 @@ class Router
       }
     }
     return "Page not found!";
+  }
+
+  public function getCurrentUrl()
+  {
+    $url = $_SERVER["PATH_INFO"] ?? "/";
+    if (strlen($url) > 1) {
+      $url = rtrim($url, "/");
+    }
+    return $url;
   }
 }
