@@ -2,5 +2,14 @@
 
 require __DIR__ . "/vendor/autoload.php";
 
-new Framework\Router;
-new App\Module;
+$router = new Framework\Router;
+
+$router->add("/", function () {
+  return "In home.";
+});
+
+$router->add("/projects", function () {
+  return "In projects.";
+});
+
+echo $router->run();

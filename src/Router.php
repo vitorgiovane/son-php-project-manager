@@ -4,8 +4,20 @@ namespace Framework;
 
 class Router
 {
-  public function __construct()
+  private $routes = [];
+
+  public function add(string $route, $callback)
   {
-    echo "<h1>Hello, World!</h1>";
+    $this->routes[$route] = $callback;
+  }
+
+  public function run()
+  {
+    $route = $_SERVER["PATH_INFO"] ?? "/";
+
+    if (array_key_exists($route, $this->routes)) {
+      return $this->routes[$route]();
+    }
+    return "Page not found!";
   }
 }
