@@ -10,7 +10,7 @@ services:
       - ./docker/mariadb/data:/var/lib/mysql
     restart: "always"
     ports:
-      - ${DB_PORT}:${DB_INTERNAL_PORT}
+      - ${DB_EXTERNAL_PORT}:${DB_PORT}
     environment:
       - MYSQL_DATABASE=${DB_DATABASE}
       - MYSQL_USER=${DB_USER}
@@ -42,6 +42,6 @@ services:
       - mariadb
     environment:
       - PMA_HOST=${DOCKER_CONTAINER_PREFIX}-mariadb
-      - PMA_PORT=${DB_INTERNAL_PORT}
+      - PMA_PORT=${DB_PORT}
       - PMA_USER=${DB_USER}
       - PMA_PASSWORD=${DB_PASSWORD}
