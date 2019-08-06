@@ -19,8 +19,14 @@ require __DIR__ . "/config/routes.php";
 
 try {
   $result = $router->run();
+
   $response = new Framework\Response;
-  $response($result["action"], $result["params"]);
+  $params = [
+    "container" => $container,
+    "params" => $result["params"]
+  ];
+
+  $response($result["action"], $params);
 } catch (\Framework\Exceptions\HttpException $exception) {
   echo json_encode(["error" => $exception->getMessage()]);
 }

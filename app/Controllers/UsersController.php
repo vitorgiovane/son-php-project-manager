@@ -6,15 +6,11 @@ use App\Models\User;
 
 class UsersController
 {
-  public function __construct($container)
+  public function show($container, $params)
   {
-    $this->container = $container;
-  }
+    $user = new User($container);
+    $userData = $user->get($params[1]);
 
-  public function show($id)
-  {
-    $user = new User($this->container);
-    $userData = $user->get($id);
     return "My name is $userData->name";
   }
 }
