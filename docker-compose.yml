@@ -1,13 +1,13 @@
 version: "3"
 
 services:
-  mariadb:
-    container_name: "${DOCKER_CONTAINER_PREFIX}-mariadb"
+  mysql:
+    container_name: "${DOCKER_CONTAINER_PREFIX}-mysql"
     build:
       context: ./
-      dockerfile: ./docker/mariadb/Dockerfile
+      dockerfile: ./docker/mysql/Dockerfile
     volumes:
-      - ./docker/mariadb/data:/var/lib/mysql
+      - ./docker/mysql/data:/var/lib/mysql
     restart: "always"
     ports:
       - ${DB_EXTERNAL_PORT}:${DB_PORT}
@@ -39,9 +39,9 @@ services:
     ports:
       - "${PMA_PORT}:80"
     links:
-      - mariadb
+      - mysql
     environment:
-      - PMA_HOST=${DOCKER_CONTAINER_PREFIX}-mariadb
+      - PMA_HOST=${DOCKER_CONTAINER_PREFIX}-mysql
       - PMA_PORT=${DB_PORT}
       - PMA_USER=${DB_USER}
       - PMA_PASSWORD=${DB_PASSWORD}

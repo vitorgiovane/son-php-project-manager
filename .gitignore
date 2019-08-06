@@ -5,6 +5,6 @@
 
 .env
 
-docker/mariadb/data
+docker/mysql/data
 
 /vendor/
