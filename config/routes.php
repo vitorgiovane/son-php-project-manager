@@ -1,11 +1,13 @@
 <?php
 
-$router->add("get", "/", function () use ($container) {
-  $pdo = $container["db"];
-  var_dump($pdo);
+use App\Models\User;
+
+$router->add("get", "/", function () {
   return "In home.";
 });
 
-$router->add("get", "/projects/(\d+)", function ($param) {
-  return "In project $param[1].";
+$router->add("get", "/users/(\d+)", function ($params) use ($container) {
+  $user = new User($container);
+  $userData = $user->get($params[1]);
+  return "In project $userData->name";
 });

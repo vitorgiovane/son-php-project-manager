@@ -12,4 +12,12 @@ $options = [
   \PDO::MYSQL_ATTR_INIT_COMMAND => "SET names utf8"
 ];
 
-$db = new Connection($prefix, $host, $port, $database, $user, $password, $options);
+$db = new Connection(
+  $prefix,
+  $host,
+  $port,
+  $database,
+  $user,
+  $password,
+  $options
+);
