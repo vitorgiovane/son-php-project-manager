@@ -4,11 +4,11 @@ require __DIR__ . "/vendor/autoload.php";
 
 $router = new Framework\Router;
 
-$router->add("/", function () {
+$router->add("get", "/", function () {
   return "In home.";
 });
 
-$router->add("/projects/(\d+)", function ($param) {
+$router->add("get", "/projects/(\d+)", function ($param) {
   return "In project $param[1].";
 });
 

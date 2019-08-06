@@ -6,17 +6,23 @@ class Router
 {
   private $routes = [];
 
-  public function add(string $route, $callback)
+  public function add(string $method, string $route, $callback)
   {
+    $method = strtolower($method);
     $route = "/^" . str_replace("/", "\/", $route) . "$/";
-    $this->routes[$route] = $callback;
+    $this->routes[$method][$route] = $callback;
   }
 
   public function run()
   {
     $url = $this->getCurrentUrl();
+    $method = strtolower($_SERVER["REQUEST_METHOD"]);
 
-    foreach ($this->routes as $route => $action) {
+    if (empty($this->routes[$method])) {
+      return "Page not found!";
+    }
+
+    foreach ($this->routes[$method] as $route => $action) {
       if (preg_match($route, $url, $params)) {
         return $action($params);
       }
