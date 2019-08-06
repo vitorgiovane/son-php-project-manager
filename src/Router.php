@@ -8,15 +8,18 @@ class Router
 
   public function add(string $route, $callback)
   {
+    $route = "/^" . str_replace("/", "\/", $route) . "$/";
     $this->routes[$route] = $callback;
   }
 
   public function run()
   {
-    $route = $_SERVER["PATH_INFO"] ?? "/";
+    $url = $_SERVER["PATH_INFO"] ?? "/";
 
-    if (array_key_exists($route, $this->routes)) {
-      return $this->routes[$route]();
+    foreach ($this->routes as $route => $action) {
+      if (preg_match($route, $url, $params)) {
+        return $action($params);
+      }
     }
     return "Page not found!";
   }

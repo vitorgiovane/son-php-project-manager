@@ -8,8 +8,8 @@ $router->add("/", function () {
   return "In home.";
 });
 
-$router->add("/projects", function () {
-  return "In projects.";
+$router->add("/projects/(\d+)", function ($param) {
+  return "In project $param[1].";
 });
 
 echo $router->run();
