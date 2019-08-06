@@ -22,15 +22,15 @@ class Connection
 
   public function connect()
   {
-    // try {
-    $dataSourceName = "$this->prefix:host=$this->host;port=$this->port;dbname=$this->database;";
-    $connection = new \PDO($dataSourceName, $this->user, $this->password, $this->options);
-    $connection->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
-    return $connection;
-    // } catch (\PDOException $exception) {
-    //   echo "<strong>Exception code:</strong> {$exception->getCode()}<br>";
-    //   echo "<strong>Message:</strong> {$exception->getMessage()}";
-    //   exit;
-    // }
+    try {
+      $dataSourceName = "$this->prefix:host=$this->host;port=$this->port;dbname=$this->database;";
+      $connection = new \PDO($dataSourceName, $this->user, $this->password, $this->options);
+      $connection->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+      return $connection;
+    } catch (\PDOException $exception) {
+      echo "<strong>Exception code:</strong> {$exception->getCode()}<br>";
+      echo "<strong>Message:</strong> {$exception->getMessage()}";
+      exit;
+    }
   }
 }
