@@ -18,15 +18,17 @@ require __DIR__ . "/config/containers.php";
 require __DIR__ . "/config/routes.php";
 
 try {
-  $result = $router->run();
+  $routeResponse = $router->run();
+  $routeParams = $routeResponse["params"];
+  $routeAction = $routeResponse["action"];
 
   $response = new Framework\Response;
   $params = [
     "container" => $container,
-    "params" => $result["params"]
+    "params" => $routeParams
   ];
 
-  $response($result["action"], $params);
+  $response($routeAction, $params);
 } catch (\Framework\Exceptions\HttpException $exception) {
   echo json_encode(["error" => $exception->getMessage()]);
 }
