@@ -11,6 +11,7 @@ class User
   public function __construct(Container $container)
   {
     $this->db = $container["db"];
+    $this->events = $container["events"];
   }
 
   public function get($id)
@@ -20,5 +21,11 @@ class User
     $statement->execute([$id]);
 
     return $statement->fetch(\PDO::FETCH_OBJ);
+  }
+
+  public function create(array $data)
+  {
+    $this->events->trigger("creating.users", null, $data);
+    $this->events->trigger("created.users", null, $data);
   }
 }

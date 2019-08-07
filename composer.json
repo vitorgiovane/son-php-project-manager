@@ -10,7 +10,8 @@
   "require": {
     "pimple/pimple": "^3.2",
     "vlucas/phpdotenv": "^3.4",
-    "symfony/http-foundation": "^4.3"
+    "symfony/http-foundation": "^4.3",
+    "zendframework/zend-eventmanager": "^3.2"
   },
   "autoload": {
     "psr-4": {
