@@ -3,21 +3,25 @@
 namespace Framework;
 
 use Framework\Response;
+use Pimple\Container;
+use Framework\Router;
 use Framework\Exceptions\HttpException;
 
 class App
 {
-  private $router;
   private $container;
   private $middlewares = [
     "before" => [],
     "after" => []
   ];
 
-  public function __construct($container, $router)
+  public function __construct(Container $container = null)
   {
     $this->container = $container;
-    $this->router = $router;
+
+    if ($this->container === null) {
+      $this->container = new Container();
+    }
   }
 
   public function addMiddleware($on, $callback)
@@ -25,14 +29,53 @@ class App
     $this->middlewares[$on][] = $callback;
   }
 
+  public function getRouter()
+  {
+    if (!$this->container->offsetExists("router")) {
+      $this->container["router"] = function () {
+        return new Router;
+      };
+    }
+
+    return $this->container["router"];
+  }
+
+  public function getResponse()
+  {
+    if (!$this->container->offsetExists("response")) {
+      $this->container["response"] = function () {
+        return new Response;
+      };
+    }
+
+    return $this->container["response"];
+  }
+
+  public function getHttpErrorHandler()
+  {
+    if (!$this->container->offsetExists("httpErrorHandler")) {
+      $this->container["httpErrorHandler"] = function ($container) {
+        header("Content-Type: application/json");
+        $response = json_encode([
+          "code" => $container["exception"]->getCode(),
+          "error" => $container["exception"]->getMessage()
+        ]);
+
+        return $response;
+      };
+    }
+
+    return $this->container["httpErrorHandler"];
+  }
+
   public function run()
   {
     try {
-      $routeResponse = $this->router->run();
+      $routeResponse = $this->getRouter()->run();
       $routeParams = $routeResponse["params"];
       $routeAction = $routeResponse["action"];
 
-      $response = new Response;
+      $response = $this->getResponse();
       $params = [
         "container" => $this->container,
         "params" => $routeParams
@@ -50,7 +93,8 @@ class App
         $middleware($this->container);
       }
     } catch (HttpException $exception) {
-      echo json_encode(["error" => $exception->getMessage()]);
+      $this->container["exception"] = $exception;
+      echo $this->getHttpErrorHandler();
     }
   }
 }
