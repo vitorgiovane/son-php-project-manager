@@ -15,6 +15,7 @@ require __DIR__ . "/vendor/autoload.php";
 $router = new Framework\Router;
 
 require __DIR__ . "/config/containers.php";
+require __DIR__ . "/config/middlewares.php";
 require __DIR__ . "/config/events.php";
 require __DIR__ . "/config/routes.php";
 
@@ -29,7 +30,17 @@ try {
     "params" => $routeParams
   ];
 
+  $middlewaresBeforeResponse = $middlewares["before"];
+  foreach ($middlewaresBeforeResponse as $middleware) {
+    $middleware($container);
+  }
+
   $response($routeAction, $params);
+
+  $middlewaresAfterResponse = $middlewares["after"];
+  foreach ($middlewaresAfterResponse as $middleware) {
+    $middleware($container);
+  }
 } catch (\Framework\Exceptions\HttpException $exception) {
   echo json_encode(["error" => $exception->getMessage()]);
 }
