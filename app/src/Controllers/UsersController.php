@@ -20,7 +20,7 @@ class UsersController
   public function store($container, $request)
   {
     $user = new User($container);
-    return $user->create($request->request->all());
+    return $user->store($request->request->all());
   }
 
   public function update($container, $request)

@@ -23,9 +23,20 @@ class User
     return $statement->fetch(\PDO::FETCH_OBJ);
   }
 
-  public function create(array $data)
+  public function store(array $data)
   {
+    $userData = array_values($data);
     $this->events->trigger("creating.users", null, $data);
-    $this->events->trigger("created.users", null, $data);
+
+    $sql = "INSERT INTO `users` (`name`) VALUES (?)";
+    $statement = $this->db->prepare($sql);
+    $statement->execute($userData);
+
+    $lastInsertedId = $this->db->lastInsertId();
+    $user = $this->get($lastInsertedId);
+
+    $this->events->trigger("created.users", null, $user);
+
+    return $user;
   }
 }
