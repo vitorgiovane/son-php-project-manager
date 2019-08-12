@@ -12,14 +12,10 @@ if (file_exists(__DIR__ . '/vendor/autoload.php')) {
   die;
 }
 
-require __DIR__ . "/vendor/autoload.php";
+$composer = require __DIR__ . "/vendor/autoload.php";
 
-require __DIR__ . "/config/containers.php";
-require __DIR__ . "/config/events.php";
+require __DIR__ . "/config/modules.php";
 
-$app = new App($container);
-$router = $app->getRouter();
+$app = new App($composer, $modules);
 
-require __DIR__ . "/config/middlewares.php";
-require __DIR__ . "/config/routes.php";
 $app->run();

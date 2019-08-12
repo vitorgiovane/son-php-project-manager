@@ -16,7 +16,7 @@ class ModuleRegistry
     $this->app = $app;
   }
 
-  public function setCompser($composer)
+  public function setComposer($composer)
   {
     $this->composer = $composer;
   }
@@ -29,7 +29,25 @@ class ModuleRegistry
   public function run()
   {
     foreach ($this->modules as $module) {
-      // 
+      $this->registry($module);
     }
+  }
+
+  private function registry($module)
+  {
+    $app = $this->app;
+    $container = $app->getContainer();
+    $router = $app->getRouter();
+
+    $namespaces = $module->getNamespaces();
+
+    foreach ($namespaces as $prefix => $path) {
+      $this->composer->setPsr4($prefix, $path);
+    }
+
+    require $module->getContainerConfig();
+    require $module->getEventConfig();
+    require $module->getMiddlewareConfig();
+    require $module->getRouteConfig();
   }
 }
