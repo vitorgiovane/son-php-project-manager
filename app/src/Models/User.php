@@ -40,4 +40,19 @@ class User extends Model
 
     return $user;
   }
+
+  public function update($id, $data)
+  {
+    $this->events->trigger("updating.users", null, $data);
+    $userData = array_values($data);
+    $userData = array_merge($userData, [$id]);
+    $query = "UPDATE users SET `name` = ? WHERE id = ?;";
+    $statement = $this->db->prepare($query);
+    $statement->execute($userData);
+
+    $updatedUser = $this->get($id);
+
+    $this->events->trigger("updating.users", null, $updatedUser);
+    return $updatedUser;
+  }
 }

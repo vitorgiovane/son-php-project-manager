@@ -26,7 +26,8 @@ class UsersController
 
   public function update($container, $request)
   {
-    return "Update";
+    $user = new User($container);
+    return $user->update($request->attributes->get(1), $request->request->all());
   }
 
   public function destroy($container, $request)
