@@ -15,11 +15,14 @@ class User extends Model
     return $statement->fetchAll(\PDO::FETCH_OBJ);
   }
 
-  public function get($id)
+  public function get(array $conditions)
   {
-    $query = "SELECT * FROM users WHERE id = ?;";
-    $statement = $this->db->prepare($query);
-    $statement->execute([$id]);
+    $query = $this->queryBuilder
+      ->select("users")
+      ->where($conditions)
+      ->getData();
+    $statement = $this->db->prepare($query->sql);
+    $statement->execute($query->bind);
 
     return $statement->fetch(\PDO::FETCH_OBJ);
   }
@@ -37,35 +40,44 @@ class User extends Model
     $statement->execute($query->bind);
 
     $lastInsertedId = $this->db->lastInsertId();
-    $user = $this->get($lastInsertedId);
+    $conditions = ["id" => $lastInsertedId];
+    $user = $this->get($conditions);
 
     $this->events->trigger("created.user", null, $user);
 
     return $user;
   }
 
-  public function update($id, $data)
+  public function update(array $conditions, array $data)
   {
     $this->events->trigger("updating.user", null, $data);
-    $userData = array_values($data);
-    $userData = array_merge($userData, [$id]);
-    $query = "UPDATE users SET `name` = ? WHERE id = ?;";
-    $statement = $this->db->prepare($query);
-    $statement->execute($userData);
 
-    $updatedUser = $this->get($id);
+    $query = $this->queryBuilder
+      ->update("users", $data)
+      ->where($conditions)
+      ->getData();
+
+    $statement = $this->db->prepare($query->sql);
+    $statement->execute($query->bind);
+
+    $updatedUser = $this->get($conditions);
 
     $this->events->trigger("updated.user", null, $updatedUser);
     return $updatedUser;
   }
 
-  public function delete($id)
+  public function delete(array $conditions)
   {
-    $user = $this->get($id);
+    $user = $this->get($conditions);
     $this->events->trigger("deleting.user", null, $user);
-    $query = "DELETE FROM `users` WHERE `id` = ?;";
-    $statement = $this->db->prepare($query);
-    $statement->execute([$id]);
+
+    $query = $this->queryBuilder
+      ->delete("users")
+      ->where($conditions)
+      ->getData();
+
+    $statement = $this->db->prepare($query->sql);
+    $statement->execute($query->bind);
     $this->events->trigger("deleted.user", null, $user);
     return $user;
   }

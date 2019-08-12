@@ -15,7 +15,9 @@ class UsersController
   public function show($container, $request)
   {
     $user = new User($container);
-    return $user->get($request->attributes->get(1));
+    $id = $request->attributes->get(1);
+    $conditions = ["id" => $id];
+    return $user->get($conditions);
   }
 
   public function store($container, $request)
@@ -27,12 +29,20 @@ class UsersController
   public function update($container, $request)
   {
     $user = new User($container);
-    return $user->update($request->attributes->get(1), $request->request->all());
+
+    $id = $request->attributes->get(1);
+    $conditions = ["id" => $id];
+
+    return $user->update($conditions, $request->request->all());
   }
 
   public function destroy($container, $request)
   {
     $user = new User($container);
-    return $user->delete($request->attributes->get(1));
+
+    $id = $request->attributes->get(1);
+    $conditions = ["id" => $id];
+
+    return $user->delete($conditions);
   }
 }

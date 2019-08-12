@@ -46,7 +46,21 @@ class QueryBuilder
   }
 
   public function where(array $conditions)
-  { }
+  {
+    if (!$this->sql) {
+      $message = "A select, update or delete command is required before of where method.";
+      throw new \Exception($message);
+    }
+
+    $columns = array_keys($conditions);
+    foreach ($columns as &$column) {
+      $column = $column . " = ?";
+    }
+    $this->bind = array_merge($this->bind, array_values($conditions));
+    $this->sql .= " WHERE " . implode(" and ", $columns);
+
+    return $this;
+  }
 
   public function getData(): \stdClass
   {
