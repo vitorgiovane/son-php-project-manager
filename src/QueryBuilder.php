@@ -47,6 +47,9 @@ class QueryBuilder
 
   public function where(array $conditions)
   {
+    if (empty($conditions)) {
+      return $this;
+    }
     if (!$this->sql) {
       $message = "A select, update or delete command is required before of where method.";
       throw new \Exception($message);
