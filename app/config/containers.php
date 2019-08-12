@@ -10,3 +10,5 @@ $container["db"] = $db->connect();
 $container["user_model"] = function ($container) {
   return new \App\Models\User($container);
 };
+
+return $container;
