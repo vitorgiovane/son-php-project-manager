@@ -15,7 +15,14 @@ class QueryBuilder
 
   public function insert(string $table, array $data)
   {
-    $this->sql = "INSERT INTO `{$table}` (`name`) VALUES (?)";
+    $sql = "INSERT INTO `{$table}` (`%s`) VALUES (%s)";
+
+    $columns = array_keys($data);
+    $values = array_fill(0, count($columns), "?");
+    $this->bind = array_values($data);
+
+    $this->sql = sprintf($sql, implode(",", $columns), implode(",", $values));
+
     return $this;
   }
 
@@ -35,5 +42,14 @@ class QueryBuilder
   { }
 
   public function getData(): \stdClass
-  { }
+  {
+    $query = new \stdClass;
+    $query->sql = $this->sql;
+    $query->bind = $this->bind;
+
+    $this->sql = null;
+    $this->bind = [];
+
+    return $query;
+  }
 }

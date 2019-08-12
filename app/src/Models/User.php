@@ -26,12 +26,15 @@ class User extends Model
 
   public function create(array $data)
   {
-    $userData = array_values($data);
     $this->events->trigger("creating.user", null, $data);
 
-    $sql = "INSERT INTO `users` (`name`) VALUES (?);";
-    $statement = $this->db->prepare($sql);
-    $statement->execute($userData);
+    $queryBuilder = new \Framework\QueryBuilder;
+    $query = $queryBuilder
+      ->insert("users", $data)
+      ->getData();
+
+    $statement = $this->db->prepare($query->sql);
+    $statement->execute($query->bind);
 
     $lastInsertedId = $this->db->lastInsertId();
     $user = $this->get($lastInsertedId);
