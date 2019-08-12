@@ -14,13 +14,13 @@ class UsersController
   public function show($container, $request)
   {
     $user = new User($container);
-    $user->create(["name" => "Vitor"]);
     return $user->get($request->attributes->get(1));
   }
 
   public function store($container, $request)
   {
-    return "Store";
+    $user = new User($container);
+    return $user->create($request->request->all());
   }
 
   public function update($container, $request)
