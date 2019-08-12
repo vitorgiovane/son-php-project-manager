@@ -8,7 +8,8 @@ class UsersController
 {
   public function index($container, $request)
   {
-    return "Index";
+    $user = new User($container);
+    return $user->all();
   }
 
   public function show($container, $request)

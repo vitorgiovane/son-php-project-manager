@@ -2,21 +2,22 @@
 
 namespace App\Models;
 
-use Pimple\Container;
+use App\Models\Model;
 
-class User
+class User extends Model
 {
-  private $db;
-
-  public function __construct(Container $container)
+  public function all()
   {
-    $this->db = $container["db"];
-    $this->events = $container["events"];
+    $query = "SELECT * FROM users;";
+    $statement = $this->db->prepare($query);
+    $statement->execute();
+
+    return $statement->fetchAll(\PDO::FETCH_OBJ);
   }
 
   public function get($id)
   {
-    $query = "SELECT * FROM users WHERE id = ?";
+    $query = "SELECT * FROM users WHERE id = ?;";
     $statement = $this->db->prepare($query);
     $statement->execute([$id]);
 
@@ -28,7 +29,7 @@ class User
     $userData = array_values($data);
     $this->events->trigger("creating.users", null, $data);
 
-    $sql = "INSERT INTO `users` (`name`) VALUES (?)";
+    $sql = "INSERT INTO `users` (`name`) VALUES (?);";
     $statement = $this->db->prepare($sql);
     $statement->execute($userData);
 
