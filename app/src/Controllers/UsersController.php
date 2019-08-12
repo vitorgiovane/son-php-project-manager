@@ -21,7 +21,7 @@ class UsersController
   public function store($container, $request)
   {
     $user = new User($container);
-    return $user->store($request->request->all());
+    return $user->create($request->request->all());
   }
 
   public function update($container, $request)
@@ -32,6 +32,7 @@ class UsersController
 
   public function destroy($container, $request)
   {
-    return "Destroy";
+    $user = new User($container);
+    return $user->delete($request->attributes->get(1));
   }
 }
